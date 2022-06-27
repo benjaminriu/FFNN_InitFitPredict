@@ -1,6 +1,6 @@
 # FFNN_InitFitPredict
 Implementation of Feed-Forward Neural Networks (FFNNs) training schemes for supervised learning (regression, binary classification, multi-class classification). It combines the ease-of-use of the scikit-learn API and well-chosen default parameters with the efficiency and versatility of the pytorch library: 
-- The classes "FeedForwardRegressor" and "FeedForwardClassifier" are used through the functions "__init__()", "fit(X, y)", "predict(X)" where X is a numpy tensor (tabular dataset or images for eg.) and y a numpy vector. Functions "score(X, y)", "predict_proba(X)" and "decision_function(X)" are also implemented.
+- The classes "FeedForwardRegressor" and "FeedForwardClassifier" are used through the functions "\_\_init\_\_()", "fit(X, y)", "predict(X)" where X is a numpy tensor (tabular dataset or images for eg.) and y a numpy vector. Functions "score(X, y)", "predict_proba(X)" and "decision_function(X)" are also implemented.
 - Training is done using pytorch modules and differentiation (default architecture corresponds to a simple MultiLayerPerceptron for tabular datasets, but any pytorch module corresponding to a FFNN architecture can be used). 
 
 # The implementation encapsulates
