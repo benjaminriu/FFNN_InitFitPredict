@@ -49,7 +49,7 @@ conda install pytorch=1.9.1 -c pytorch -y
 # How to cite
 
 If you use the Feed-Forward Neural Networks implementation in your research, you can cite it as follows:
-```bash
+```
 @article{riu2022mcd,
   title={MCD : Marginal Contrastive Discrimination},
   author={Riu, Benjamin},
@@ -59,7 +59,7 @@ If you use the Feed-Forward Neural Networks implementation in your research, you
 ```
 
 If you use the AdaCap training scheme in your research, you can cite it as follows:
-```bash
+```
 @article{meziani2022adacap,
   title={AdaCap: Adaptive Capacity control for Feed-Forward Neural Networks},
   author={Meziani, Katia and Lounici, Karim and Riu, Benjamin},
@@ -69,7 +69,7 @@ If you use the AdaCap training scheme in your research, you can cite it as follo
 ```
 
 If you use the Gated Linear Units and Resblock architectures in your research, you can cite them as follows:
-```bash
+```
 @article{gorishniy2021revisiting,
   title={Revisiting deep learning models for tabular data},
   author={Gorishniy, Yury and Rubachev, Ivan and Khrulkov, Valentin and Babenko, Artem},
