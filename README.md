@@ -34,6 +34,8 @@ conda activate FFNN_demo
 conda install ipykernel scikit-learn=0.23.2 scipy=1.6.2 -c anaconda -y
 conda install pytorch=1.9.1 cudatoolkit=11.1 -c pytorch -c conda-forge -y 
 conda deactivate
+wget 'https://github.com/benjaminriu/FFNN_InitFitPredict.git'
+cd FFNN_InitFitPredict
 ```
 
 ### if no gpu available:
