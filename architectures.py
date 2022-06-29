@@ -16,21 +16,6 @@ def initialize_weights(m, init_type="xavier_uniform_", gain_type='relu', init_se
         getattr(torch.nn.init, init_type)(
             m.weight, gain=torch.nn.init.calculate_gain(gain_type))
 
-
-if importlib.util.find_spec('torch.cuda'):
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-else:
-    device = "cpu"
-
-
-def initialize_weights(m, init_type="xavier_uniform_", gain_type='relu', init_seed=False):
-    if type(m) == torch.nn.Linear:
-        if type(init_seed) == type(0) and device != "cpu":
-            torch.cuda.manual_seed_all(init_seed)
-        getattr(torch.nn.init, init_type)(
-            m.weight, gain=torch.nn.init.calculate_gain(gain_type))
-
-
 class DenseLayers(torch.nn.Module):  # Basic Feed Forward Dense MLP
     def __init__(self,
                  n_features,
