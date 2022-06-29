@@ -85,6 +85,9 @@ If you use the Gated Linear Units and Resblock architectures in your research, y
 - compatibility with pytorch DataLoaders in addition to numpy format,
 - compatibility with custom pytorch loss functions,
 - compatibility with custom stopping criterions,
+- compatibility with custom (missing from pytorch) optimizers and lr\_schedulers 
+- compatibility with custom stopping criterions
 - encapsulating state back-up, state loading, partial\_fit and warm-start,
 - encapsulating weight-freezing, refitting and transfer learning,
-- encapsulating domain-specific data-augmentation schemes (eg.: image rotations).
+- encapsulating observation normalization and domain-specific data-augmentation schemes (eg.: image rotations),
+- comment code.
