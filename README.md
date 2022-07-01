@@ -1,7 +1,17 @@
-# FFNN_InitFitPredict
+# FFNN\_InitFitPredict
 Implementation of Feed-Forward Neural Networks (FFNNs) training schemes for supervised learning (regression, binary classification, multi-class classification). It combines the ease-of-use of the scikit-learn API and well-chosen default parameters with the efficiency and versatility of the pytorch library: 
 - The classes "FeedForwardRegressor" and "FeedForwardClassifier" are used through the functions "\_\_init\_\_()", "fit(X, y)", "predict(X)" where X is a numpy tensor (tabular observations or images for eg.) and y a numpy vector. Functions "score(X, y)", "predict_proba(X)" and "decision_function(X)" are also implemented.
-- Training is done using pytorch modules and automatic differentiation (default architecture corresponds to a simple MultiLayerPerceptron for tabular datasets, but any pytorch module corresponding to a FFNN architecture can be used). 
+- Training is done using pytorch modules and automatic differentiation (default architecture corresponds to a simple MultiLayerPerceptron for tabular datasets, but any pytorch module corresponding to a FFNN architecture can be used).
+
+# Why would I ever use this instead of [skorch](https://github.com/skorch-dev/skorch)?
+In many ways, this projects aims to do the same things as the [skorch](https://github.com/skorch-dev/skorch) package. The latter is a much bigger project, managed by a much larger team. If your goal is to design a state-of-the-art machine learning pipeline to win a kaggle, the implementation  of the AdaCap training method by FFNN\_InitFitPredict is the only thing which might justify using FFNN\_InitFitPredict instead of skorch (see "key missing features section below"). If you are an academic or practitionner who wants to quickly get a sense of how a neural network would perform on a dataset, in a project in which deep learning is not the main focus, there are a few reasons which justifies why (as of late 2022) you might want to use FFNN\_InitFitPredict instead of skorch or [fastai](https://github.com/fastai/fastai). Without going into details, the cost of entry for FFNN\_InitFitPredict is smaller than skorch or fastai since it does not introduce a new API and does not require changing the default parameters to outperform a basic random forest. 
+
+| Project | scikit-learn API | Deep Learning | Default mode = Performance |
+| ----------- | ----------- | ----------- | ----------- |
+| FFNN\_InitFitPredict | Yes |  Yes | Yes |
+| [skorch](https://github.com/skorch-dev/skorch) |  Yes |  Yes | No |
+| [fastai](https://github.com/fastai/fastai) | No |  Yes | Yes |
+| [catboost](https://github.com/catboost/catboost) | Yes | No | Yes |
 
 # The implementation encapsulates
 - compatibility with all pytorch optimizers, learning rate schedulers, modules and associated schemes (weight-decay, drop-out, batch-normalization, ...),
@@ -17,6 +27,7 @@ Implementation of Feed-Forward Neural Networks (FFNNs) training schemes for supe
 - gpu rapid access memory safeguards,
 - AdaCap training scheme (see how to cite section),
 - ...
+
 
 # Repository content
 
@@ -87,6 +98,7 @@ If you use the Gated Linear Units and Resblock architectures in your research, y
 - compatibility with pytorch DataLoaders in addition to numpy format,
 - compatibility with custom pytorch loss functions,
 - compatibility with custom stopping criterions,
+- compatibility with more than one output architectures (eg: architectures yielding intermediary quantities during training)
 - compatibility with custom (missing from pytorch) optimizers and lr\_schedulers 
 - compatibility with custom stopping criterions
 - encapsulating state back-up, state loading, partial\_fit and warm-start,
