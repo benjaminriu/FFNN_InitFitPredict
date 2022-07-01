@@ -20,12 +20,12 @@ In many ways, this projects aims to do the same things as the [skorch](https://g
 - target dithering,
 - train/validation splitting with stratification (using a custom stratification scheme for regression), 
 - stopping strategies (early-stopping, convergence, divergence, max iterations, max epochs, max run-time),
-- training metrics recording and verbosity management,
-- train/eval mode switching (including output activation function switch for classification),
-- gpu/cpu detection and switch,
+- training metrics recording and verbosity management (but no Callbacks),
+- train/predict/predict\_proba mode switching (including output activation function switch for classification),
+- gpu/cpu detection and automated switch,
 - pytorch and cuda random seed fixation (including drop-out),
 - gpu rapid access memory safeguards,
-- AdaCap training scheme (see how to cite section),
+- the AdaCap training scheme (see how to cite section),
 - ...
 
 
