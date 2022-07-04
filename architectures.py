@@ -16,6 +16,7 @@ def initialize_weights(m, init_type="xavier_uniform_", gain_type='relu', init_se
         getattr(torch.nn.init, init_type)(
             m.weight, gain=torch.nn.init.calculate_gain(gain_type))
 
+
 class DenseLayers(torch.nn.Module):  # Basic Feed Forward Dense MLP
     def __init__(self,
                  n_features,

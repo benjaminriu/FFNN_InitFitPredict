@@ -771,7 +771,10 @@ class FeedForwardNeuralNetwork(BaseEstimator, metaclass=ABCMeta):
         torch.cuda.empty_cache()
 
     def _get_default_hidden_nn(self):
-        return DefaultDenseLayers
+        if is_classifier(self): 
+            return DefaultGLULayers
+        else: 
+            return DefaultDenseLayers
 
     def _get_default_hidden_params(self, n_features):
         true_output = self.n_classes if self.multi_class else 1
@@ -787,9 +790,9 @@ class FeedForwardRegressor(RegressorMixin, FeedForwardNeuralNetwork):
                  lr_scheduler="OneCycleLR",
                  learning_rate=1e-3,
                  optimizer_params={},
-                 lr_scheduler_params={"max_lr": 1e-2, "total_steps": 200},
+                 lr_scheduler_params={"max_lr": 1e-2, "total_steps": 500},
                  batch_size=False,
-                 max_iter=50,
+                 max_iter=500,
                  epochs=False,
                  max_runtime=300,
                  validation_fraction=0.2,
@@ -797,7 +800,7 @@ class FeedForwardRegressor(RegressorMixin, FeedForwardNeuralNetwork):
                  early_stopping_criterion="validation",
                  convergence_tol=False,
                  divergence_tol=False,
-                 adacap=False,
+                 adacap=True,
                  closeform_parameter_init="max_variation",
                  closeform_intercept=True,
                  n_permut=16,
@@ -834,9 +837,9 @@ class FeedForwardClassifier(ClassifierMixin, FeedForwardNeuralNetwork):
                  lr_scheduler="OneCycleLR",
                  learning_rate=1e-3,
                  optimizer_params={},
-                 lr_scheduler_params={"max_lr": 1e-2, "total_steps": 200},
+                 lr_scheduler_params={"max_lr": 1e-2, "total_steps": 500},
                  batch_size=False,
-                 max_iter=200,
+                 max_iter=500,
                  epochs=False,
                  max_runtime=300,
                  validation_fraction=0.2,
@@ -910,12 +913,12 @@ if True:
                      n_features,
                      # Number of neurons on output layer. (Should be 0 for AdaCap, 1 for regular regression or binary classification, else number of classes).
                      output,
-                     width=256,
+                     width=512,
                      depth=2,
-                     activation="ReLU",
-                     dropout=0.2,
-                     batch_norm=True,
-                     initializer_params={},
+                     activation="SELU",
+                     dropout=0.,
+                     batch_norm=False,
+                     initializer_params={"gain_type": 'linear'},
                      device=device):
             super(DefaultDenseLayers, self).__init__()
 
@@ -939,3 +942,75 @@ if True:
 
         def forward(self, activation):
             return self.model.forward(activation)
+        
+    # Gated Linear Units network inspired by https://github.com/yandex-research/rtdl/blob/main/bin/
+    class DefaultGLULayers(torch.nn.Module):  # Gated Linear Units
+        def __init__(self,
+                     n_features,
+                     output,# Number of neurons on output layer
+                     width=512,
+                     depth=3,
+                     gate_activation="Sigmoid",
+                     output_activation="ReLU",
+                     dropout=0.2,
+                     batch_norm=True,
+                     gate_initializer_params={"gain_type": 'sigmoid'},
+                     linear_initializer_params={},
+                     output_initializer_params={},
+                     device=device):
+            super(DefaultGLULayers, self).__init__()
+
+            layers = [GatedLinearUnit(n_features, width,
+                                      gate_activation=gate_activation,
+                                      gate_initializer_params=gate_initializer_params,
+                                      linear_initializer_params=linear_initializer_params,
+                                      device=device)]
+            if dropout:
+                layers += [torch.nn.Dropout(dropout)]
+            if batch_norm:
+                layers += [torch.nn.BatchNorm1d(width, device=device)]
+            for layer in range(1, depth-1):
+                layers += [GatedLinearUnit(width, width,
+                                           gate_activation=gate_activation,
+                                           gate_initializer_params=gate_initializer_params,
+                                           linear_initializer_params=linear_initializer_params,
+                                           device=device)]
+                if dropout:
+                    layers += [torch.nn.Dropout(dropout)]
+                if batch_norm:
+                    layers += [torch.nn.BatchNorm1d(width, device=device)]
+            layers += [torch.nn.Linear(width, width, device=device),
+                       getattr(torch.nn, output_activation)()]
+            initialize_weights(layers[-2], **output_initializer_params)
+            if dropout:
+                layers += [torch.nn.Dropout(dropout)]
+            if batch_norm:
+                layers += [torch.nn.BatchNorm1d(width, device=device)]
+            if output:
+                layers += [torch.nn.Linear(width, output, device=device)]
+                initialize_weights(layers[-1], **output_initializer_params)
+            self.model = torch.nn.Sequential(*layers)
+
+        def forward(self, activation):
+            return self.model.forward(activation)
+
+    class GatedLinearUnit(torch.nn.Module):
+        def __init__(self,
+                     input_dim,
+                     output_dim,
+                     gate_activation="Sigmoid",
+                     linear_initializer_params={},
+                     gate_initializer_params={"gain_type": 'sigmoid'},
+                     device=device
+                     ):
+            super(GatedLinearUnit, self).__init__()
+            self.linear_layer = torch.nn.Linear(
+                input_dim, output_dim, device=device)
+            self.gate_layer = torch.nn.Linear(input_dim, output_dim, device=device)
+
+            initialize_weights(self.linear_layer, **linear_initializer_params)
+            initialize_weights(self.gate_layer, **gate_initializer_params)
+            self.gate_activation = getattr(torch.nn, gate_activation)()
+
+        def forward(self, activation):
+            return self.linear_layer(activation) * self.gate_activation(self.gate_layer(activation))
