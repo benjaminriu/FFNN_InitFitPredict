@@ -21,7 +21,7 @@ Implementation of Feed-Forward Neural Networks (FFNNs) training schemes for supe
 
 # Repository content
 
-- DemoFFNN.ipynb is a tutorial on how to use this repository.
+- DemoFFNN.ipynb is a tutorial on how to use this project.
 - feed_forward_neural_network.py implements "FeedForwardRegressor" and "FeedForwardClassifier" and can be used as a stand-alone. 
 - architectures.py contains pytorch modules corresponding to several FFNN architectures : Multilayer Perceptrons, Gated Linear Units, Resblocks and a basic ConvNet. Gated Linear Units and Resblocks are derived from the article [Revisiting Deep Learning Models for Tabular Data](https://arxiv.org/abs/2106.11959) (see how to cite section).
 - parameters_examples.py provides hyper-parameters combinations corresponding to relevant learning schemes and networks shapes for small and large tabular datasets in both regression and classification. It also includes provides appropriate parameters for Marginal Contrastive Discrimination (see how to cite section).
